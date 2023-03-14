@@ -12,8 +12,17 @@ class PyHTTPForwarderHandler(BaseHTTPRequestHandler):
         super().__init__(*args, **kwargs)
 
     def __forward_http(self):
-        result = requests.get("http://"+ self.target + self.path)
-        print(f"forwarded")
+        try:
+            result = requests.get("http://"+ self.target + self.path)
+            print(f"forwarded")
+        except Exception as e:
+            print(f"Failed to forward to {self.target}{self.path}")
+            raise Exception(e)
+
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+        self.wfile.write(bytes("<html>OK</html>", "utf-8"))
         return result
 
     def do_GET(self):
