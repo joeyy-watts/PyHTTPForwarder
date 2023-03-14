@@ -4,7 +4,7 @@ import subprocess
 from functools import partial
 from http.server import HTTPServer
 
-from http_forwarder_server import PyHTTPForwarderHandler, PyHTTPForwarderServer
+from http_forwarder_server import PyHTTPForwarderHandler
 
 
 def get_main_mac_address():
