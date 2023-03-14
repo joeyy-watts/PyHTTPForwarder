@@ -1,6 +1,3 @@
-import os
-import re
-import subprocess
 from functools import partial
 from http.server import HTTPServer
 
@@ -20,26 +17,13 @@ def format_mac_address(mac_addr: str):
 			final_addr = final_addr + char
 	return final_addr.lower()
 
-def refresh_arp_cache():
-	cmd = 'nmap -sP 192.168.1.0/24'
-	print(f'refreshing arp cache with command :: {cmd}')
-	subprocess.run(cmd.split(' '))
-
-def get_main_ip():
-	# todo: only refresh once every day
-	#refresh_arp_cache()
-	cmd = f"arp -an | grep {get_main_mac_address()}"
-	print(f"getting main led controller ip with command :: {cmd}")
-	ret = subprocess.check_output((cmd),shell=True,stderr=subprocess.STDOUT).decode()
-	print(f'ret is {ret}')
-	pattern = "([0-9.])+"
-	match = re.search(pattern, ret)
-	return match.group()
-
 
 if __name__ == '__main__':
 	port = 8080
-	handler = partial(PyHTTPForwarderHandler, get_main_ip())
+	# local ip is fixed to when handler is instantiated
+	# have to make this dynamic
+	# have to pass MAC address to handler, have handler do local IP magic instead
+	handler = partial(PyHTTPForwarderHandler, get_main_mac_address())
 	server = HTTPServer(('', port), handler)
 	print(f"Started LED Tunnel server at port {port}")
 	server.serve_forever()
