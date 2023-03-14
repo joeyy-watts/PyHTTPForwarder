@@ -1,6 +1,11 @@
 import os
 import re
 import subprocess
+from functools import partial
+from http.server import HTTPServer
+
+from http_forwarder_server import PyHTTPForwarderHandler, PyHTTPForwarderServer
+
 
 def get_main_mac_address():
 	conf = open('./mac_addrs.conf', 'r')
@@ -33,4 +38,9 @@ def get_main_ip():
 
 
 if __name__ == '__main__':
-	print(get_main_ip())
+	port = 8080
+	handler = partial(PyHTTPForwarderHandler, get_main_ip())
+	server = HTTPServer(('', port), handler)
+	print(f"Started LED Tunnel server at port {port}")
+	server.serve_forever()
+
