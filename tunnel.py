@@ -3,7 +3,7 @@ from functools import partial
 from http.server import HTTPServer
 
 from tunnel_master_handler import TunnelMasterHandler
-from utils import load_mac_mapping
+from utils import load_mac_mapping, refresh_arp_cache
 
 from http_forwarder_server import PyHTTPForwarderHandler
 
@@ -32,6 +32,9 @@ if __name__ == '__main__':
 	# local ip is fixed to when handler is instantiated
 	# have to make this dynamic
 	# have to pass MAC address to handler, have handler do local IP magic instead
+
+	# refresh arp cache on first run
+	refresh_arp_cache()
 
 	mapping = load_mac_mapping()
 
