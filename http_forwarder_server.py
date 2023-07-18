@@ -14,6 +14,8 @@ class PyHTTPForwarderHandler(BaseHTTPRequestHandler):
         super().__init__(*args, **kwargs)
 
     def __forward_http(self):
+        # TODO: support other HTTP methods
+        # TODO: return result from target to caller
         try:
             result = requests.get("http://" + self.local_ip_handler.local_ip + self.path)
 
