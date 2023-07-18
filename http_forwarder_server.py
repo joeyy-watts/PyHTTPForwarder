@@ -13,13 +13,13 @@ class PyHTTPForwarderHandler(BaseHTTPRequestHandler):
         self.local_ip_handler = LocalIPHandler(target_mac_address)
         super().__init__(*args, **kwargs)
 
-    def __forward_http(self, method="GET"):
+    def __forward_http(self, method="GET", data=""):
         # TODO: support other HTTP methods
         try:
             if method == "GET":
                 result = requests.get("http://" + self.local_ip_handler.local_ip + self.path)
             elif method == "POST":
-                result = requests.get("http://" + self.local_ip_handler.local_ip + self.path)
+                result = requests.post("http://" + self.local_ip_handler.local_ip + self.path, data=data)
 
             if result.status_code != 200:
                 print(f"Target returned non-OK status code, updating local IP and retrying..")
@@ -47,5 +47,6 @@ class PyHTTPForwarderHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         print(f"POST request at path :: {self.path}")
+        data_string = self.rfile.read(int(self.headers['Content-Length']))
         print(f"forwarding to {self.local_ip_handler.local_ip}")
-        self.__forward_http(method="POST")
+        self.__forward_http(method="POST", data=data_string)
