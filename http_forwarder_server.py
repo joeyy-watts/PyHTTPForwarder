@@ -26,16 +26,16 @@ class PyHTTPForwarderHandler(BaseHTTPRequestHandler):
                 self.local_ip_handler.refresh_local_ip()
                 result = requests.get("http://" + self.local_ip_handler.local_ip + self.path)
 
-                if result.status_code != 200:
-                    print(f"Target returned on OK status code :: {result.status_code}")
-                else:
-                    print(f"Target returned OK, returning result to caller..")
+            if result.status_code != 200:
+                print(f"Target returned on OK status code :: {result.status_code}")
+            else:
+                print(f"Target returned OK, returning result to caller..")
 
-                self.send_response(result.status_code)
-                self.send_header("Content-type", "text/html")
-                self.end_headers()
-                self.wfile.write(bytes(result.text, "utf-8"))
-                return result
+            self.send_response(result.status_code)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
+            self.wfile.write(bytes(result.text, "utf-8"))
+            return result
         except Exception as e:
             print(f"Failed to forward to {self.local_ip_handler.local_ip}{self.path}, due to exception :: {e}")
             raise Exception(e)
