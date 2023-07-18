@@ -10,19 +10,6 @@ from http_forwarder_server import PyHTTPForwarderHandler
 # port for tunnel master to run on
 TUNNEL_PORT = 8080
 
-def get_main_mac_address():
-	conf = open('./mac_addrs.conf', 'r')
-	return format_mac_address(conf.read())
-
-def format_mac_address(mac_addr: str):
-	final_addr = ''
-	for char_idx, char in enumerate(mac_addr):
-		if (char_idx + 1) % 2 == 0 and char_idx < 11:
-			final_addr = final_addr + char + ':'
-		else:
-			final_addr = final_addr + char
-	return final_addr.lower()
-
 def start_server_async(server: HTTPServer):
 	print(f"Starting forwarder at port :: {server.server_port}")
 	server.serve_forever()
